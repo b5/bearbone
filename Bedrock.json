@@ -1,0 +1,25 @@
+{
+	"folders" : [
+		{
+			"name": "Root",
+			"path": "./",
+			"folder_exclude_patterns": [""]
+		},
+		{
+			"name" : "Lib",
+			"path" : "./lib"
+		},
+		{
+			"name" : "Test",
+			"path" : "./test"
+		},
+		{
+			"name" : "Modules",
+			"path" : "./node_modules"
+		}
+	],
+	"settings" : {
+		"tab_size" : 2,
+		"translate_spaces_to_tabs" : true
+	}
+}

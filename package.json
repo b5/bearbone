@@ -1,0 +1,23 @@
+{
+  "name": "bedrock",
+  "version": "0.0.0",
+  "description": "My flavour of Models & Controllers",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brendanobrienesq/bedrock.git"
+  },
+  "keywords": [
+    "MVC",
+    "M-C",
+    "Model",
+    "Controller"
+  ],
+  "author": "beastmode",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "9dc9926627b3192bfed76b56f77c147838ad31fe"
+}
