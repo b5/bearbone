@@ -120,7 +120,7 @@ describe('Model', function(){
 				return object;
 			};
 			model.read(createdModelId, function(object){
-				object.publicWasCalled.should.be.true;
+				object.publicWasCalled.should.equal(true);
 				done();
 			});
 		});
@@ -136,17 +136,17 @@ describe('Model', function(){
 			};
 
 			model.once('created', function(object){
-				object.privateWasCalled.should.be.true;
+				object.privateWasCalled.should.equal(true);
 				complete();
 			});
 
 			model.once('updated', function(object){
-				object.privateWasCalled.should.be.true;
+				object.privateWasCalled.should.equal(true);
 				complete();
 			});
 
 			model.once('deleted', function(object){
-				object.privateWasCalled.should.be.true;
+				object.privateWasCalled.should.equal(true);
 				complete();
 			});
 
@@ -163,5 +163,14 @@ describe('Model', function(){
 		it('should listen for children being added', function(){
 			
 		});
-	}); 
+	});
+
+	describe('counts & totals', function(){
+		it('count', function (done){
+			model.count(function(count){
+				count.should.be.a('number');
+				done();
+			});
+		});
+	});
 });

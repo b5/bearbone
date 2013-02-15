@@ -1,5 +1,5 @@
 {
-  "name": "bedrock",
+  "name": "bearbone",
   "version": "0.0.0",
   "description": "My flavour of Models & Controllers",
   "main": "index.js",
@@ -19,5 +19,12 @@
   "author": "beastmode",
   "license": "BSD",
   "readmeFilename": "README.md",
-  "gitHead": "9dc9926627b3192bfed76b56f77c147838ad31fe"
+  "gitHead": "9dc9926627b3192bfed76b56f77c147838ad31fe",
+  "dependencies" : {
+    "ninjazord" : "0.0.2"
+  },
+  "devDependencies": {
+    "mocha": "1.6.0",
+    "should" : "1.2.1"
+  }
 }
