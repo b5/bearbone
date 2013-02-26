@@ -1,4 +1,4 @@
 bedrock
 =======
 
-My flavour of Models &amp; Controllers for Express.js
+My flavour of Models &amp; Controllers for Express.js.

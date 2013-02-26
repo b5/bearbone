@@ -42,9 +42,12 @@ describe('Child Model', function(){
 
 	before(function(done){
 		db.setPrefix('tests.');
-		db.createObject('parentModels', { attrOne :'test', attrTwo: 2, attrThree: true}, function(object){
-			parentObject = object;
-			done();
+		db.nukeNamespace('tests.', function(){
+			db.createObject('parentModels', { attrOne :'test', attrTwo: 2, attrThree: true}, function(object){
+				parentObject = object;
+				parentObject.should.be.a('object');
+				done();
+			});
 		});
 	});
 
@@ -68,6 +71,9 @@ describe('Child Model', function(){
 		});
 		it('create work with valid parent & attributes', function(done){
 			createAttrs.parentId = parentObject.id;
+
+			childModel.verbose = true;
+			
 			childModel.create(createAttrs, function(object){
 				object.should.be.a('object');
 				object.id.should.be.a('number');
