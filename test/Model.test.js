@@ -14,8 +14,11 @@ describe('Model', function(){
 	  , body = 'test body'
 	  , createdModelId = undefined;
 
-	before(function(){
-		//db.setPrefix('test.');
+	before(function(done){
+		db.nukeNamespace('tests.', function(){
+			db.setPrefix('tests.');
+			done();
+		});
 	});
 
 	it('should be an object that inherits from EventEmitter', function(done){
@@ -158,6 +161,73 @@ describe('Model', function(){
 			});
 		});
 	});
+
+	describe('Object attribute types', function(){
+		var ObjectModel = Model.extend({
+			name : 'objectModels',
+			storedAttributes : {
+				one : ['string',true,false,'attrOne'],
+				two : ['object',true,false,{ example : 'value' }],
+				three : ['object']
+			}
+		});
+		var objectModel = new ObjectModel()
+			, object
+			, flat
+			, unflat;
+		
+		it('flatten methods', function(){
+			objectModel.flatten.should.be.a('function');
+			objectModel.unflatten.should.be.a('function');
+		});
+		it('model.flatten should flatten an object', function(){
+			flat = objectModel.flatten({
+				one : 'string',
+				two : {
+					three : 'four',
+					five : 'six',
+					seven : 'eight',
+					nine: {
+						'ten' : 'eleven'
+					}
+				},
+				ten : 10
+			});
+			flat['two.three'].should.equal('four');
+			flat['two.five'].should.equal('six');
+			flat['two.nine.ten'].should.equal('eleven');
+		});
+
+		it('model.unflatten should reverse that shit', function(){
+			unflat = model.unflatten(flat);
+			unflat.two.three.should.equal('four');
+			unflat.two.five.should.equal('six');
+		});
+
+		it('should be able to create', function(done){
+			objectModel.create({ one : 'testOne', two : { HUH : 'rational', test : 'value'}, three : { test : 'threeValue' } }, function(newObject){
+				object = newObject;
+				object.should.be.a('object');
+				done();
+			});
+		});
+
+		it('should be able to read back', function(done){
+			objectModel.read(object.id, function(readObject){
+				object = readObject;
+				object.two.should.be.a('object');
+				object.two.test.should.equal('value');
+				object.two.HUH.should.equal('rational');
+				object.three.test.should.equal('threeValue');
+				done();
+			});
+		});
+	});
+
+	describe.skip('Array Attribute Types', function (){
+
+	});
+
 	// @todo - Auto Child Created/Updated/Deleted Listeners
 	describe.skip('Children Listeners', function(){
 		it('should listen for children being added', function(){

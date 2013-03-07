@@ -8,6 +8,8 @@ My flavour of Models &amp; Controllers for Express.js.
 * ChildController Unit Test.
 
 # Roadmap
+* enable "object" as storage type
+* enable nested objects storage
 * Make all refernces to db go through 'self.db' so that when I copy methods I don't get that fucking error.
 * ChildModel AcceptedParents filter
 * ChildControllers

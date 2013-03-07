@@ -172,6 +172,69 @@ describe('Child Model', function(){
 		});
 	});
 
+	describe('Object attribute types', function(){
+		var ObjectModel = ChildModel.extend({
+			name : 'objectModels',
+			storedAttributes : {
+				one : ['string',true,false,'attrOne'],
+				two : ['object',true,false,{ example : 'value' }],
+				three : ['object']
+			}
+		});
+		var objectModel = new ObjectModel()
+			, object
+			, flat
+			, unflat;
+		
+		it('flatten methods', function(){
+			objectModel.flatten.should.be.a('function');
+			objectModel.unflatten.should.be.a('function');
+		});
+		it('childModel.flatten should flatten an object', function(){
+			flat = objectModel.flatten({
+				one : 'string',
+				two : {
+					three : 'four',
+					five : 'six',
+					seven : 'eight',
+					nine: {
+						'ten' : 'eleven'
+					}
+				},
+				ten : 10
+			});
+			flat['two.three'].should.equal('four');
+			flat['two.five'].should.equal('six');
+			flat['two.nine.ten'].should.equal('eleven');
+		});
+
+		it('childModel.unflatten should reverse that shit', function(){
+			unflat = objectModel.unflatten(flat);
+			unflat.two.three.should.equal('four');
+			unflat.two.five.should.equal('six');
+		});
+
+		it('should be able to create', function(done){
+			objectModel.create({ parentModel : 'parentModels', parentId : parentObject.id, one : 'testOne', two : { HUH : 'rational', test : 'value'}, three : { test : 'threeValue' } }, function(newObject){
+				object = newObject;
+				object.should.be.a('object');
+				done();
+			});
+		});
+
+		it('should be able to read back', function(done){
+			objectModel.read({ parentModel : 'parentModels', parentId : parentObject.id, id : object.id }, function(readObject){
+				object = readObject;
+				object.two.should.be.a('object');
+				object.two.test.should.equal('value');
+				object.two.HUH.should.equal('rational');
+				object.three.test.should.equal('threeValue');
+				done();
+			});
+		});
+	});
+
+
 	describe('External ID childModel', function(){
 		var ExternalIdTestModel = ChildModel.extend({
 				name : 'externals',
