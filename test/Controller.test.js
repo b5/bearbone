@@ -41,7 +41,7 @@ describe('Controller',function () {
 		testController.emit.should.be.a('function');
 	});
 	it('should have an extend method', function(){
-		
+		TestController.extend.should.be.a('function');
 	});
 	it('should require a model', function(){
 		try { new Controller() }
@@ -138,7 +138,4 @@ describe('Controller',function () {
 		});
 	});
 
-	after(function(){
-
-	});
 });
