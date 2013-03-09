@@ -1,6 +1,6 @@
 var should = require('should')
-  , Model = require('../lib/Model')
-  , db = require('ninjazord');
+	, Model = require('../lib/Model')
+	, db = require('ninjazord');
 
 describe('Model', function(){
 	var TestModel = Model.extend({
@@ -10,9 +10,9 @@ describe('Model', function(){
 					defaultAttr : ['string', true, false, 'Store Me.']
 				}
 			})
-	  , model = new TestModel
-	  , body = 'test body'
-	  , createdModelId = undefined;
+		, model = new TestModel
+		, body = 'test body'
+		, createdModelId = undefined;
 
 	before(function(done){
 		db.nukeNamespace('tests.', function(){
@@ -172,38 +172,8 @@ describe('Model', function(){
 			}
 		});
 		var objectModel = new ObjectModel()
-			, object
-			, flat
-			, unflat;
-		
-		it('flatten methods', function(){
-			objectModel.flatten.should.be.a('function');
-			objectModel.unflatten.should.be.a('function');
-		});
-		it('model.flatten should flatten an object', function(){
-			flat = objectModel.flatten({
-				one : 'string',
-				two : {
-					three : 'four',
-					five : 'six',
-					seven : 'eight',
-					nine: {
-						'ten' : 'eleven'
-					}
-				},
-				ten : 10
-			});
-			flat['two.three'].should.equal('four');
-			flat['two.five'].should.equal('six');
-			flat['two.nine.ten'].should.equal('eleven');
-		});
-
-		it('model.unflatten should reverse that shit', function(){
-			unflat = model.unflatten(flat);
-			unflat.two.three.should.equal('four');
-			unflat.two.five.should.equal('six');
-		});
-
+			, object;
+			
 		it('should be able to create', function(done){
 			objectModel.create({ one : 'testOne', two : { HUH : 'rational', test : 'value'}, three : { test : 'threeValue' } }, function(newObject){
 				object = newObject;
