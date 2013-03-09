@@ -21,8 +21,7 @@
   "readmeFilename": "README.md",
   "gitHead": "9dc9926627b3192bfed76b56f77c147838ad31fe",
   "dependencies" : {
-    "ninjazord" : "0.1.1",
-    "flat" : "0.2.0"
+    "ninjazord" : "0.1.1"
   },
   "devDependencies": {
     "mocha": "1.6.0",
