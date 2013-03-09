@@ -232,6 +232,20 @@ describe('Child Model', function(){
 				done();
 			});
 		});
+
+		it('should be able to update (and delete keys not included with the update)', function(done){
+			objectModel.update({ parentModel : 'parentModels', parentId: parentObject.id, id : object.id, two : { one: 'newValue', three : 'otherNewValue'} }, function(updatedObject){
+				object = updatedObject;
+				should.not.exist(object.two.HUH);
+				should.not.exist(object.two.test);
+
+				object.three.test.should.equal('threeValue');
+				object.two.one.should.equal('newValue');
+				object.two.thre.should.equal('otherNewValue');
+
+				done();
+			});
+		});
 	});
 
 

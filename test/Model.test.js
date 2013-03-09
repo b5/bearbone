@@ -78,7 +78,7 @@ describe('Model', function(){
 		it('should have an update method', function(done){
 			body = 'updated test body';
 			model.update.should.be.a('function');
-			model.update(createdModelId, { body : body }, function(newObject){
+			model.update({ id : createdModelId, body : body }, function(newObject){
 				newObject.body.should.equal(body);
 				done();
 			});
@@ -90,7 +90,7 @@ describe('Model', function(){
 				object.body.should.equal(body);
 				done();
 			});
-			model.update(createdModelId, { body : body });
+			model.update({ id: createdModelId, body : body });
 		});
 		it('should have a delete method', function(done){
 			model.del.should.be.a('function');
@@ -155,7 +155,7 @@ describe('Model', function(){
 
 			model.create({ body : body, dontCreateMe : 'do not create me'}, function(object){
 				object.body = 'updated body';
-				model.update(object.id, object, function(){
+				model.update(object, function(){
 					model.del(object.id);
 				});
 			});
@@ -219,6 +219,20 @@ describe('Model', function(){
 				object.two.test.should.equal('value');
 				object.two.HUH.should.equal('rational');
 				object.three.test.should.equal('threeValue');
+				done();
+			});
+		});
+
+		it('should be able to update (and delete keys not included with the update)', function(done){
+			objectModel.update({ id: object.id, two : { one: 'newValue', three : 'otherNewValue'} }, function(updatedObject){
+				object = updatedObject;
+				should.not.exist(object.two.HUH);
+				should.not.exist(object.two.test);
+				
+				object.three.test.should.equal('threeValue');
+				object.two.one.should.equal('newValue');
+				object.two.three.should.equal('otherNewValue');
+				
 				done();
 			});
 		});
