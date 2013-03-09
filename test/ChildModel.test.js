@@ -241,7 +241,7 @@ describe('Child Model', function(){
 
 				object.three.test.should.equal('threeValue');
 				object.two.one.should.equal('newValue');
-				object.two.thre.should.equal('otherNewValue');
+				object.two.three.should.equal('otherNewValue');
 
 				done();
 			});
