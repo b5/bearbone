@@ -108,6 +108,27 @@ describe('Model', function(){
 		});
 	});
 
+	describe('Attribute Type Validation & Coercion', function(){
+		var TypeTestModel = Model.extend({
+			name : 'typeTests',
+			storedAttributes : {
+				num : ['number', true],
+				str : ['str', true],
+				bool: ['boolean']
+			}
+		});
+
+		var typeTest = new TypeTestModel();
+		it('should not store numbers that coerce to "NaN"', function(){
+			typeTest.validate({ num : 'SMOKE', str : 'a'}).should.equal(false);
+			typeTest.validate({ num : '1234e5ehds', str : 'a'}).should.equal(false);
+		});
+
+		it('shouldn\'t accept numbers for strings', function(){
+			typeTest.validate({num : 5, str : 5}).should.equal(false);
+		});
+	});
+
 	describe('Public & Private object formatting', function(){
 		before(function(done){
 			model.create({ body : body, dontCreateMe : 'do not create me'}, function(newObject){
