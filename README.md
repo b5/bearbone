@@ -1,4 +1,4 @@
-bedrock
+bearbone
 =======
 
 My flavour of Models &amp; Controllers for Express.js.
