@@ -9,7 +9,7 @@ var should = require('should')
 describe('Child Model', function(){
 	var TestChildModel = ChildModel.extend({
 				name: 'childModels',
-				storedAttributes: {
+				attributes: {
 					id: ['number'],
 					body: ['string', true],
 					parentModel: ['string', true, true],
@@ -175,7 +175,7 @@ describe('Child Model', function(){
 	describe('Object attribute types', function(){
 		var ObjectModel = ChildModel.extend({
 			name : 'objectModels',
-			storedAttributes : {
+			attributes : {
 				one : ['string',true,false,'attrOne'],
 				two : ['object',true,false,{ example : 'value' }],
 				three : ['object']
@@ -223,7 +223,7 @@ describe('Child Model', function(){
 		var ExternalIdTestModel = ChildModel.extend({
 				name : 'externals',
 				externalId : true,
-				storedAttributes : {
+				attributes : {
 					body : ['string', true]
 				}
 			})

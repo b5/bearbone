@@ -5,7 +5,7 @@ var should = require('should')
 describe('Model', function(){
 	var TestModel = Model.extend({
 				name : "test",
-				storedAttributes: {
+				attributes: {
 					body : ['string', true],
 					defaultAttr : ['string', true, false, 'Store Me.']
 				}
@@ -34,8 +34,8 @@ describe('Model', function(){
 	it('should have an extend method',function(){
 		Model.extend.should.be.a('function');
 	});
-	it('should have a storedAttributes entity', function(){
-		model.storedAttributes.should.be.a('object');
+	it('should have a attributes entity', function(){
+		model.attributes.should.be.a('object');
 	});
 	it('should have a validate method', function(){
 		model.validate.should.be.a('function');
@@ -111,7 +111,7 @@ describe('Model', function(){
 	describe('Attribute Type Validation & Coercion', function(){
 		var TypeTestModel = Model.extend({
 			name : 'typeTests',
-			storedAttributes : {
+			attributes : {
 				num : ['number', true],
 				str : ['str', true],
 				bool: ['boolean']
@@ -186,7 +186,7 @@ describe('Model', function(){
 	describe('Object attribute types', function(){
 		var ObjectModel = Model.extend({
 			name : 'objectModels',
-			storedAttributes : {
+			attributes : {
 				one : ['string',true,false,'attrOne'],
 				two : ['object',true,false,{ example : 'value' }],
 				three : ['object']

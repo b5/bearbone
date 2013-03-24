@@ -11,7 +11,7 @@ var should = require('should')
 describe('Controller',function () {
 	var TestModel = Model.extend({
 				name : 'testModels',
-				storedAttributes : {
+				attributes : {
 					title : ['string',true, false, 'default title'],
 					body : ['string',false,false,'default body'],
 					hidden : ['boolean']

@@ -133,7 +133,7 @@ describe('ChildController Test', function(){
 function setup (callback) {
 	var TestModel = Model.extend({
 		name : 'parents',
-		storedAttributes : {
+		attributes : {
 			one : ['string'],
 			two : ['number']
 		}
@@ -142,7 +142,7 @@ function setup (callback) {
 
 	var TestChildModel = ChildModel.extend({
 		name : 'children',
-		storedAttributes : {
+		attributes : {
 			three : ['string', true, false, 'apples'],
 			four : ['number', true]
 		}
