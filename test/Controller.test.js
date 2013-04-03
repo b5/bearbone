@@ -14,7 +14,7 @@ describe('Controller',function () {
 				attributes : {
 					title : ['string',true, false, 'default title'],
 					body : ['string',false,false,'default body'],
-					hidden : ['boolean']
+					hidden : ['boolean', true, false, false]
 				}
 			})
 		, testModel = new TestModel()
@@ -29,8 +29,11 @@ describe('Controller',function () {
 			})
 		, testController = new TestController();
 
-	before(function(){
-		db.setPrefix('tests.');
+	before(function(done){
+		db.nukeNamespace('tests.', function(){
+			db.setPrefix('tests.');
+			done();
+		});
 	});
 
 	it('should be an object with a bunch of methods', function(){
@@ -70,6 +73,13 @@ describe('Controller',function () {
 			});
 			testModel.create({ title: 'events created test', body : 'cool' });
 		});
+		it('should emit model:updated after updating the model from the sets', function(done){
+			testController.once('model:updated', function(object){
+				object.should.be.a('object');
+				done();
+			});
+			testModel.update({ id: testId, title : 'updated stuff'});
+		});
 		it('should emit model:deleted after removing a deleted model from sets', function(done){
 			testController.once('model:deleted',function(object){
 				object.should.be.a('object');
@@ -108,8 +118,31 @@ describe('Controller',function () {
 					done();
 				});
 			});
-			testModel.create({hidden: false, body: 'new object'}, function(object){
+			testModel.create({ body: 'new object'}, function(object){
 				testModelId = object.id;
+			});
+		});
+		it('should update & trigger model:updated on updated event',function(done){
+			testController.get('visible',function(visibleModels){
+				// visibleModels.length.should.equal(1);
+				// visibleModels[0].id.should.equal(testModelId);
+
+				testController.get('hidden', function(hiddenModels){
+					hiddenModels.length.should.equal(0);
+
+					testController.once('model:updated', function(object){
+						testController.get('visible',function(visibleModels){
+							visibleModels.length.should.equal(0);
+							testController.get('hidden', function(hiddenModels){
+								hiddenModels.length.should.equal(1);
+								hiddenModels[0].id.should.equal(testModelId);
+								done();
+							});
+						});
+					});
+
+					testModel.update({ id: testModelId, hidden : true});
+				});
 			});
 		});
 		it('should call remove on all sets on model created event', function(done){

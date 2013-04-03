@@ -83,11 +83,13 @@ describe('Model', function(){
 				done();
 			});
 		});
-		it('should emit a updated event on creation & pass along the object', function(done){
+		it('should emit a updated event on creation & pass along the object, and the old object', function(done){
 			body = 'updated test body two!';
-			model.once('updated', function(object){
+			model.once('updated', function(object, oldObject){
 				object.should.be.a('object');
 				object.body.should.equal(body);
+				oldObject.should.be.a('object');
+				oldObject.body.should.equal('updated test body');
 				done();
 			});
 			model.update({ id: createdModelId, body : body });
