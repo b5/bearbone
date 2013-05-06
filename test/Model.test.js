@@ -235,10 +235,88 @@ describe('Model', function(){
 
 	});
 
-	// @todo - Auto Child Created/Updated/Deleted Listeners
-	describe.skip('Children Listeners', function(){
-		it('should listen for children being added', function(){
+	// Reference Listeners
+	describe('References', function(){
+		var Company, Employee, company, companyTwo, employee;
+
+		before(function(done){
+			Employee = Model.extend({
+				name : 'employees',
+				attributes : {
+					'companyId' : ['number', true],
+					'name' : ['string',true, false, 'Allen Iverson'],
+					'position' : ['string', true, false, 'IT Technician']
+				}
+			});
 			
+			Employee = new Employee();
+
+			Company = Model.extend({
+				name : 'companies',
+				attributes : {
+					'name' : ['string', true, false, 'Acme Corp.']
+				},
+				references : {
+					employees : { model : Employee, key : 'companyId' }
+				}
+			});
+
+			Company = new Company();
+
+			Company.create({ name : 'test company'}, function (newCompany){
+				company = newCompany;
+				company.should.be.a('object');
+				Company.create({ name : 'second test company'}, function (newCompany){
+					companyTwo = newCompany;
+					companyTwo.should.be.a('object');
+					done();
+				});
+			});
+		});
+
+		it('should listen for references being created', function(done){
+			Company.once('referenceAdded', function(id, refId){
+				id.should.equal(company.id);
+				refId.should.be.a('number');
+				done();
+			});
+			Employee.create({ companyId : company.id }, function(newEmployee){
+				employee = newEmployee;
+				employee.should.be.a('object');
+			}).should.not.equal(false);
+		});
+		it('should be able to spit that reference back', function(done){
+			Company.getReferences(company.id, 'employees', function(references){
+				references.should.be.a('object');
+				references[0].should.equal(employee.id);
+				done();
+			});
+		});
+		it('should move the reference on update', function(done){
+			var tasks = 2;
+			function over () { if (--tasks === 0) done(); }
+			Company.once('referenceAdded', function(id, refId){
+				id.should.equal(companyTwo.id);
+				refId.should.equal(employee.id);
+				over();
+			});
+			Company.once('referenceRemoved', function(id, refId){
+				id.should.equal(company.id);
+				refId.should.equal(employee.id);
+				over();
+			});
+			Employee.update({ id : employee.id, companyId : companyTwo.id}, function(updatedEmployee){
+				employee = updatedEmployee;
+				employee.should.be.a('object');
+			}).should.not.equal(false);
+		});
+		it('should delete the reference on delete', function(done){
+			Company.once('referenceRemoved', function(id, refId){
+				id.should.equal(companyTwo.id);
+				refId.should.equal(employee.id);
+				done();
+			});
+			Employee.del(employee.id).should.not.equal(false);
 		});
 	});
 
