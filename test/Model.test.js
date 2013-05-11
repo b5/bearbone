@@ -257,8 +257,9 @@ describe('Model', function(){
 					'name' : ['string', true, false, 'Acme Corp.']
 				},
 				references : {
-					employees : { model : Employee, key : 'companyId' }
-				}
+					employees : { model : Employee, key : 'companyId', added : 'employeeCreated' }
+				},
+				employeeCreated : function (model) { }
 			});
 
 			Company = new Company();
@@ -324,6 +325,14 @@ describe('Model', function(){
 				done();
 			});
 			Employee.del(employee.id).should.not.equal(false);
+		});
+		it('should call the supplied callback on addition', function(done){
+			Company.references.employees.added = function (employee) {
+				employee.should.be.a('object');
+				employee.name.should.equal('Fizz Buzz');
+				done();
+			};
+			Employee.create({ companyId : company.id, name : 'Fizz Buzz' });
 		});
 	});
 
