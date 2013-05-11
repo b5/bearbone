@@ -292,6 +292,13 @@ describe('Model', function(){
 				done();
 			});
 		});
+		it('should be able to read those references', function(done){
+			Company.readReferences(company.id, 'employees', function(references){
+				references.should.be.a('object');
+				references[0].should.be.a('object');
+				done();
+			});
+		});
 		it('should move the reference on update', function(done){
 			var tasks = 2;
 			function over () { if (--tasks === 0) done(); }
