@@ -328,6 +328,7 @@ describe('Model', function(){
 		});
 		it('should call the supplied callback on addition', function(done){
 			Company.references.employees.added = function (employee) {
+				this.name.should.equal('companies');
 				employee.should.be.a('object');
 				employee.name.should.equal('Fizz Buzz');
 				done();
