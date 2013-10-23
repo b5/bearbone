@@ -30,6 +30,7 @@ describe('Controller',function () {
 		, testController = new TestController();
 
 	before(function(done){
+		testModel.verbose = true;
 		db.nukeNamespace('tests.', function(){
 			db.setPrefix('tests.');
 			done();
@@ -93,32 +94,39 @@ describe('Controller',function () {
 	describe('Sets', function (){
 		// Sets keep a recored ordered according to the 0th value listed
 		// in the array. it can be any value.
+		before(function(done){
+			testModel.create({ hidden : true },function(err,obj){
+				should.not.exist(err);
+				done();
+			})
+		});
+
 		it('should require a sets object with array values', function(){
 			try { new Controller({model : testModel}); }
-			catch (err) { err.should.exist }
+			catch (err) { should.exist(err); }
 		});
 		it('get method should return an array of read model objects',function(done){
 			testController.get.should.be.a('function');
-			testController.get('all', function(set){
+			testController.get('all', function(err, set){
 				set.should.be.a('object');
 				set.length.should.be.a('number');
 				done();
 			});
 		});
 		it('get method should return false if the set doesn\'t exist', function(done){
-			testController.get('adfghjk',function(set){
+			testController.get('adfghjk',function(err, set){
 				set.should.equal(false);
 				done();
 			});
 		});
 		it('should call add on all sets on model created event', function(done){
 			testController.once('model:created',function(){
-				testController.get('all',function(all){
+				testController.get('all',function(err, all){
 					all.should.be.a('object');
 					done();
 				});
 			});
-			testModel.create({ body: 'new object'}, function(object){
+			testModel.create({ body: 'new object'}, function(err, object){
 				testModelId = object.id;
 			});
 		});
@@ -127,15 +135,15 @@ describe('Controller',function () {
 				// visibleModels.length.should.equal(1);
 				// visibleModels[0].id.should.equal(testModelId);
 
-				testController.get('hidden', function(hiddenModels){
-					hiddenModels.length.should.equal(0);
+				testController.get('hidden', function(err, hiddenModels){
+					hiddenModels.length.should.equal(1);
 
-					testController.once('model:updated', function(object){
-						testController.get('visible',function(visibleModels){
+					testController.once('model:updated', function(err, object){
+						testController.get('visible',function(err, visibleModels){
 							visibleModels.length.should.equal(0);
-							testController.get('hidden', function(hiddenModels){
-								hiddenModels.length.should.equal(1);
-								hiddenModels[0].id.should.equal(testModelId);
+							testController.get('hidden', function(err, hiddenModels){
+								hiddenModels.length.should.equal(2);
+								hiddenModels[hiddenModels.length - 1].id.should.equal(testModelId);
 								done();
 							});
 						});
@@ -145,9 +153,9 @@ describe('Controller',function () {
 				});
 			});
 		});
-		it('should call remove on all sets on model created event', function(done){
+		it('should call remove on all sets on model deleted event', function(done){
 			testController.once('model:deleted',function(){
-				testController.get('all',function(all){
+				testController.get('all',function(err, all){
 					all.should.be.a('object');
 					done();
 				});
@@ -157,13 +165,13 @@ describe('Controller',function () {
 	});
 	describe('Indexes', function(){
 		before(function(done){
-			testModel.create({ title : 'kickass', body : 'no body!'}, function(newObject){
+			testModel.create({ title : 'kickass', body : 'no body!'}, function(err, newObject){
 				done();
 			});
 		});
 
 		it('should have a find method', function(done){
-			testController.find('kickass',function(object){
+			testController.find('kickass',function(err, object){
 				object.length.should.equal(1);
 				object[0].should.be.a('object');
 				done();

@@ -10,7 +10,7 @@ describe('Model', function(){
 					defaultAttr : ['string', true, false, 'Store Me.']
 				}
 			})
-		, model = new TestModel
+		, model = new TestModel()
 		, body = 'test body'
 		, createdModelId = undefined;
 
@@ -42,20 +42,20 @@ describe('Model', function(){
 	});
 	describe('CRUD methods', function(){
 		it('should reject a call to create an object without all required properties', function(done){
-			model.create({},function(newObject){
-				newObject.should.equal(false);
+			model.create({},function(err, _object){
+				err.should.be.a('object');
 				done();
 			});
 		});
 		it('should create an object with proper options provided', function(done){
 			model.create.should.be.a('function');
-			model.create({ body : body, dontCreateMe : 'do not create me'}, function(newObject){
-				newObject.should.be.a('object');
-				newObject.defaultAttr.should.equal('Store Me.');
-				should.not.exist(newObject.dontCreateMe);
-				newObject.body.should.equal(body);
-				newObject.id.should.be.a('number');
-				createdModelId = newObject.id;
+			model.create({ body : body, dontCreateMe : 'do not create me'}, function(err, _object){
+				_object.should.be.a('object');
+				_object.defaultAttr.should.equal('Store Me.');
+				should.not.exist(_object.dontCreateMe);
+				_object.body.should.equal(body);
+				_object.id.should.be.a('number');
+				createdModelId = _object.id;
 				done();
 			});
 		});
@@ -69,21 +69,21 @@ describe('Model', function(){
 		});
 		it('should have a read method', function(done){
 			model.read.should.be.a('function');
-			model.read(createdModelId, function(object){
-				object.should.be.a('object');
-				object.body.should.equal = body;
+			model.read(createdModelId, function(err, _object){
+				_object.should.be.a('object');
+				_object.body.should.equal = body;
 				done();
 			});
 		});
 		it('should have an update method', function(done){
 			body = 'updated test body';
 			model.update.should.be.a('function');
-			model.update({ id : createdModelId, body : body }, function(newObject){
-				newObject.body.should.equal(body);
+			model.update({ id : createdModelId, body : body }, function(err, _object){
+				_object.body.should.equal(body);
 				done();
 			});
 		});
-		it('should emit a updated event on creation & pass along the object, and the old object', function(done){
+		it('should emit a updated event on update & pass along the object, and the old object', function(done){
 			body = 'updated test body two!';
 			model.once('updated', function(object, oldObject){
 				object.should.be.a('object');
@@ -103,8 +103,8 @@ describe('Model', function(){
 			model.del(createdModelId);
 		});
 		it('read should no longer respond', function (done){
-			model.read(createdModelId,function(object){
-				object.should.equal(false);
+			model.read(createdModelId,function(err, _object){
+				_object.should.equal(false);
 				done();
 			});
 		});
@@ -133,8 +133,8 @@ describe('Model', function(){
 
 	describe('Public & Private object formatting', function(){
 		before(function(done){
-			model.create({ body : body, dontCreateMe : 'do not create me'}, function(newObject){
-				createdModelId = newObject.id;
+			model.create({ body : body, dontCreateMe : 'do not create me'}, function(err,_object){
+				createdModelId = _object.id;
 				done();
 			});
 		});
@@ -145,7 +145,7 @@ describe('Model', function(){
 				object.publicWasCalled = true;
 				return object;
 			};
-			model.read(createdModelId, function(object){
+			model.read(createdModelId, function(err, object){
 				object.publicWasCalled.should.equal(true);
 				done();
 			});
@@ -176,10 +176,10 @@ describe('Model', function(){
 				complete();
 			});
 
-			model.create({ body : body, dontCreateMe : 'do not create me'}, function(object){
-				object.body = 'updated body';
-				model.update(object, function(){
-					model.del(object.id);
+			model.create({ body : body, dontCreateMe : 'do not create me'}, function(err, _object){
+				_object.body = 'updated body';
+				model.update(_object, function(err, _object){
+					model.del(_object.id);
 				});
 			});
 		});
@@ -198,16 +198,16 @@ describe('Model', function(){
 			, object;
 			
 		it('should be able to create', function(done){
-			objectModel.create({ one : 'testOne', two : { HUH : 'rational', test : 'value'}, three : { test : 'threeValue' } }, function(newObject){
-				object = newObject;
+			objectModel.create({ one : 'testOne', two : { HUH : 'rational', test : 'value'}, three : { test : 'threeValue' } }, function(err,_object){
+				object = _object;
 				object.should.be.a('object');
 				done();
 			});
 		});
 
 		it('should be able to read back', function(done){
-			objectModel.read(object.id, function(readObject){
-				object = readObject;
+			objectModel.read(object.id, function(err, _object){
+				object = _object;
 				object.two.should.be.a('object');
 				object.two.test.should.equal('value');
 				object.two.HUH.should.equal('rational');
@@ -217,8 +217,8 @@ describe('Model', function(){
 		});
 
 		it('should be able to update (and delete keys not included with the update)', function(done){
-			objectModel.update({ id: object.id, two : { one: 'newValue', three : 'otherNewValue'} }, function(updatedObject){
-				object = updatedObject;
+			objectModel.update({ id: object.id, two : { one: 'newValue', three : 'otherNewValue'} }, function(err, _object){
+				object = _object;
 				should.not.exist(object.two.HUH);
 				should.not.exist(object.two.test);
 				
@@ -264,11 +264,11 @@ describe('Model', function(){
 
 			Company = new Company();
 
-			Company.create({ name : 'test company'}, function (newCompany){
-				company = newCompany;
+			Company.create({ name : 'test company'}, function (err, _company){
+				company = _company;
 				company.should.be.a('object');
-				Company.create({ name : 'second test company'}, function (newCompany){
-					companyTwo = newCompany;
+				Company.create({ name : 'second test company'}, function (err, _company){
+					companyTwo = _company;
 					companyTwo.should.be.a('object');
 					done();
 				});
@@ -281,22 +281,22 @@ describe('Model', function(){
 				refId.should.be.a('number');
 				done();
 			});
-			Employee.create({ companyId : company.id }, function(newEmployee){
-				employee = newEmployee;
+			Employee.create({ companyId : company.id }, function(err, _employee){
+				employee = _employee;
 				employee.should.be.a('object');
 			}).should.not.equal(false);
 		});
 		it('should be able to spit that reference back', function(done){
-			Company.getReferences(company.id, 'employees', function(references){
-				references.should.be.a('object');
-				references[0].should.equal(employee.id);
+			Company.getReferences(company.id, 'employees', function(err, _references){
+				_references.should.be.a('object');
+				_references[0].should.equal(employee.id);
 				done();
 			});
 		});
 		it('should be able to read those references', function(done){
-			Company.readReferences(company.id, 'employees', function(references){
-				references.should.be.a('object');
-				references[0].should.be.a('object');
+			Company.readReferences(company.id, 'employees', function(err,_references){
+				_references.should.be.a('object');
+				_references[0].should.be.a('object');
 				done();
 			});
 		});
@@ -313,8 +313,8 @@ describe('Model', function(){
 				refId.should.equal(employee.id);
 				over();
 			});
-			Employee.update({ id : employee.id, companyId : companyTwo.id}, function(updatedEmployee){
-				employee = updatedEmployee;
+			Employee.update({ id : employee.id, companyId : companyTwo.id}, function(err, _employee){
+				employee = _employee;
 				employee.should.be.a('object');
 			}).should.not.equal(false);
 		});
@@ -339,7 +339,7 @@ describe('Model', function(){
 
 	describe('counts & totals', function(){
 		it('count', function (done){
-			model.count(function(count){
+			model.count(function(err, count){
 				count.should.be.a('number');
 				done();
 			});
