@@ -25,7 +25,11 @@ describe('Controller',function () {
 					hidden: ['hidden', true],
 					visible: ['hidden', false]
 				},
-				indexes : ['title']
+				indexes : ['title'],
+				completions : {
+					title : 99,
+					body : 50
+				}
 			})
 		, testController = new TestController();
 
@@ -179,6 +183,21 @@ describe('Controller',function () {
 		});
 	});
 	describe('Autocomplete', function(){
-		// @TODO
+		it('add completions', function(done){
+			testController.addCompletions(function(err){
+				should.not.exist(err);
+				done();
+			});
+		});
+
+		it('should return a result from a partial match on title', function(done){
+			testController.autocomplete('def',function(err, completions){
+				should.not.exist(err);
+				completions.should.be.a('object');
+				completions.length.should.be.a('number');
+				completions[0].should.be.a('object');
+				done();
+			});
+		});
 	});
 });
