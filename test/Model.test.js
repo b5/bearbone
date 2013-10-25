@@ -75,6 +75,18 @@ describe('Model', function(){
 				done();
 			});
 		});
+		it('should be able to read an array of ids', function(done){
+			model.read.should.be.a('function');
+			model.read([createdModelId, 23, createdModelId], function(err, _objects){
+				should.not.exist(err);
+				_objects.should.be.a('object');
+				_objects.length.should.be.a('number');
+				_objects[0].should.be.a('object');
+				_objects[1].should.equal(false);
+				_objects[2].should.be.a('object');
+				done();
+			})
+		});
 		it('should have an update method', function(done){
 			body = 'updated test body';
 			model.update.should.be.a('function');
