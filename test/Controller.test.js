@@ -29,7 +29,8 @@ describe('Controller',function () {
 				completions : {
 					title : 99,
 					body : 50
-				}
+				},
+				trackedAttributes : ['title']
 			})
 		, testController = new TestController();
 
@@ -196,6 +197,18 @@ describe('Controller',function () {
 				completions.should.be.a('object');
 				completions.length.should.be.a('number');
 				completions[0].should.be.a('object');
+				done();
+			});
+		});
+	});
+
+	describe('Stats', function(){
+		// it('should take a counts array that tracks stats', function(){};
+		// @todo - flesh out these tests.
+		it('should have a get stats method', function(done){
+			testController.stats(function(err,stats){
+				should.not.exist(err);
+				stats.should.be.a('object');
 				done();
 			});
 		});
