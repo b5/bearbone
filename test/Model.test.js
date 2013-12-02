@@ -312,6 +312,18 @@ describe('Model', function(){
 				done();
 			});
 		});
+		it('should be able to check if a reference exists', function(done){
+			Company.referenceExists(company.id, employee.id, 'employees', function(err,_exists){
+				_exists.should.equal(true);
+				done();
+			});
+		});
+		it('should be able to check if a reference does\'t exist', function(done){
+			Company.referenceExists(company.id, 7891456, 'employees', function(err,_exists){
+				_exists.should.equal(false);
+				done();
+			});
+		});
 		it('should move the reference on update', function(done){
 			var tasks = 2;
 			function over () { if (--tasks === 0) done(); }
