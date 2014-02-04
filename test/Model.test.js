@@ -369,4 +369,15 @@ describe('Model', function(){
 			});
 		});
 	});
+
+	describe('misconfigured db', function(){
+		it('should survive unfiled hash key', function(done){
+			db.setHash('test.1',{ 'falseKey' : 'a problem'}, function(err,res){
+				model.read(1, function(err, _model){
+					_model.should.be.a('object');
+					done();
+				});
+			});
+		});
+	});
 });
