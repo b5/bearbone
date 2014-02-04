@@ -269,7 +269,7 @@ describe('Model', function(){
 					'name' : ['string', true, false, 'Acme Corp.']
 				},
 				references : {
-					employees : { model : Employee, key : 'companyId', added : 'employeeCreated' }
+					employees : { model : Employee, key : 'companyId', added : 'employeeCreated', countAttribute : true }
 				},
 				employeeCreated : function (model) { }
 			});
@@ -321,6 +321,13 @@ describe('Model', function(){
 		it('should be able to check if a reference does\'t exist', function(done){
 			Company.referenceExists(company.id, 7891456, 'employees', function(err,_exists){
 				_exists.should.equal(false);
+				done();
+			});
+		});
+		it('should keep a count attribute if the count option is set', function (done){
+			Company.read(company.id, function (err, company){
+				company.employeesCount.should.be.a('number');
+				company.employeesCount.should.equal(1);
 				done();
 			});
 		});
