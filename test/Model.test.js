@@ -134,12 +134,12 @@ describe('Model', function(){
 
 		var typeTest = new TypeTestModel();
 		it('should not store numbers that coerce to "NaN"', function(){
-			typeTest.validate({ num : 'SMOKE', str : 'a'}).should.equal(false);
-			typeTest.validate({ num : '1234e5ehds', str : 'a'}).should.equal(false);
+			typeTest.validate({ num : 'SMOKE', str : 'a'}).should.instanceof(typeTest.Error);
+			typeTest.validate({ num : '1234e5ehds', str : 'a'}).should.instanceof(typeTest.Error);
 		});
 
 		it('shouldn\'t accept numbers for strings', function(){
-			typeTest.validate({num : 5, str : 5}).should.equal(false);
+			typeTest.validate({num : 5, str : 5}).should.instanceof(typeTest.Error);
 		});
 	});
 

@@ -1,6 +1,6 @@
 {
   "name": "bearbone",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "My flavour of Models & Controllers",
   "main": "index.js",
   "scripts": {
