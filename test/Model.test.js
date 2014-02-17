@@ -249,7 +249,7 @@ describe('Model', function(){
 
 	// Reference Listeners
 	describe('References', function(){
-		var Company, Employee, company, companyTwo, employee;
+		var Company, Employee, Accountant, company, companyTwo, employee;
 
 		before(function(done){
 			Employee = Model.extend({
@@ -263,13 +263,24 @@ describe('Model', function(){
 			
 			Employee = new Employee();
 
+			Accountant = Model.extend({
+				name : "accountants",
+				attributes : {
+					name : ["string", true, false, "walter"],
+					companyId : ["number", true]
+				}
+			});
+
+			Accountant = new Accountant();
+
 			Company = Model.extend({
 				name : 'companies',
 				attributes : {
 					'name' : ['string', true, false, 'Acme Corp.']
 				},
 				references : {
-					employees : { model : Employee, key : 'companyId', added : 'employeeCreated', countAttribute : true }
+					employees : { model : Employee, key : 'companyId', added : 'employeeCreated', countAttribute : true },
+					accountants : { model : Accountant, key : 'companyId', attribute : 'accountantId' }
 				},
 				employeeCreated : function (model) { }
 			});
@@ -365,6 +376,17 @@ describe('Model', function(){
 				done();
 			};
 			Employee.create({ companyId : company.id, name : 'Fizz Buzz' });
+		});
+
+		it('should store the most recent id to an attribute on create', function(done){
+			Company.once("referenceAdded", function(id, refId){
+				Company.read(company.id, function(err,_company){
+					company = _company;
+					company.accountantId.should.be.a('number');
+					done();
+				});
+			});
+			Accountant.create({ name : "Markus", companyId : company.id });
 		});
 	});
 
