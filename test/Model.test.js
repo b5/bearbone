@@ -249,7 +249,7 @@ describe('Model', function(){
 
 	// Reference Listeners
 	describe('References', function(){
-		var Company, Employee, Accountant, company, companyTwo, employee;
+		var Company, Employee, Accountant, company, companyTwo, employee, accountant;
 
 		before(function(done){
 			Employee = Model.extend({
@@ -280,7 +280,7 @@ describe('Model', function(){
 				},
 				references : {
 					employees : { model : Employee, key : 'companyId', added : 'employeeCreated', countAttribute : true },
-					accountants : { model : Accountant, key : 'companyId', attribute : 'accountantId' }
+					accountants : { model : Accountant, key : 'companyId', attribute : 'accountantId', deleteRule : 'cascade' }
 				},
 				employeeCreated : function (model) { }
 			});
@@ -386,7 +386,20 @@ describe('Model', function(){
 					done();
 				});
 			});
-			Accountant.create({ name : "Markus", companyId : company.id });
+			Accountant.create({ name : "Markus", companyId : company.id }, function(err,_accountant) {
+				should.not.exist(err);
+				accountant = _accountant;
+			});
+		});
+
+		it('should cascade accountant deletion on delete', function(done){
+			Company.once('deleted',function(company){
+				Accountant.read(accountant.id, function(err,_accountant){
+					_accountant.should.equal(false);
+					done();
+				})
+			});
+			Company.del(company.id);
 		});
 	});
 

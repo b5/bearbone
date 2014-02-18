@@ -192,7 +192,7 @@ describe('Controller',function () {
 		});
 
 		it('should return a result from a partial match on title', function(done){
-			testController.autocomplete('def',function(err, completions){
+			testController.autocomplete('kic',function(err, completions){
 				should.not.exist(err);
 				completions.should.be.a('object');
 				completions.length.should.be.a('number');
