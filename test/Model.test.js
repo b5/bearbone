@@ -75,6 +75,13 @@ describe('Model', function(){
 				done();
 			});
 		});
+		it('should have a read recent method', function(done){
+			model.readRecent(25,function(err, recent){
+				should.not.exist(err);
+				recent.should.be.a('object');
+				done();
+			});
+		})
 		it('should be able to read an array of ids', function(done){
 			model.read.should.be.a('function');
 			model.read([createdModelId, 23, createdModelId], function(err, _objects){

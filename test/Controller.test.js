@@ -35,7 +35,7 @@ describe('Controller',function () {
 		, testController = new TestController();
 
 	before(function(done){
-		testModel.verbose = true;
+		// testModel.verbose = true;
 		db.nukeNamespace('tests.', function(){
 			db.setPrefix('tests.');
 			done();
