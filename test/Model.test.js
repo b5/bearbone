@@ -89,8 +89,7 @@ describe('Model', function(){
 				_objects.should.be.a('object');
 				_objects.length.should.be.a('number');
 				_objects[0].should.be.a('object');
-				_objects[1].should.equal(false);
-				_objects[2].should.be.a('object');
+				_objects[1].should.be.a('object');
 				done();
 			})
 		});
@@ -287,7 +286,7 @@ describe('Model', function(){
 				},
 				references : {
 					employees : { model : Employee, key : 'companyId', added : 'employeeCreated', countAttribute : true },
-					accountants : { model : Accountant, key : 'companyId', attribute : 'accountantId', deleteRule : 'cascade' }
+					accountants : { model : Accountant, key : 'companyId', currentAttribute : 'accountantId', deleteRule : 'cascade' }
 				},
 				employeeCreated : function (model) { }
 			});
@@ -407,6 +406,19 @@ describe('Model', function(){
 				})
 			});
 			Company.del(company.id);
+		});
+
+		it('reference sorted sets', function(done){
+			done();
+		});
+		it('reference sorted sets get', function(done){
+			done();
+		});
+		it('reference sorted sets read', function(done){
+			done();
+		});
+		it('reference sorted sets read reverse', function(done){
+			done();
 		});
 	});
 
