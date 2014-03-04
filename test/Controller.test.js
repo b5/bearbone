@@ -68,6 +68,50 @@ describe('Controller',function () {
 			testController.deleted.should.be.a('function');
 		});
 	});
+	
+	describe('CRUD', function (){
+		var model;
+
+		it('create', function (done){
+			testController.create.should.be.a('function');
+			testController.create({ title : "test", body : "body", hidden : false }, function (err, _model){
+				should.not.exist(err);
+				model = _model;
+				done();
+			});
+		});
+		it('read', function (done){
+			testController.read.should.be.a('function');
+			testController.read([model.id, 12], function(err, _models){
+				should.not.exist(err);
+				should(_models instanceof Array);
+				model = _models[0];
+				done();
+			});
+		});
+		it('should have a read recent method', function(done){
+			testController.readRecent(25,function(err, recent){
+				should.not.exist(err);
+				recent.should.be.a('object');
+				done();
+			});
+		});
+		it('update', function (done){
+			testController.update.should.be.a('function');
+			testController.update(model, function (err, _model){
+				should.not.exist(err);
+				done();
+			});
+
+		});
+		it('del', function (done){
+			testController.del.should.be.a('function');
+			testController.del(model.id, function (err, _model){
+				should.not.exist(err);
+				done();
+			});
+		});
+	});
 
 	describe('Events', function(){
 		var testId;
@@ -166,51 +210,6 @@ describe('Controller',function () {
 				});
 			});
 			testModel.del(testModelId);
-		});
-	});
-	describe('Indexes', function(){
-		before(function(done){
-			testModel.create({ title : 'kickass', body : 'no body!'}, function(err, newObject){
-				done();
-			});
-		});
-
-		it('should have a find method', function(done){
-			testController.find('kickass',function(err, object){
-				object.length.should.equal(1);
-				object[0].should.be.a('object');
-				done();
-			});
-		});
-	});
-	describe('Autocomplete', function(){
-		it('add completions', function(done){
-			testController.addCompletions(function(err){
-				should.not.exist(err);
-				done();
-			});
-		});
-
-		it('should return a result from a partial match on title', function(done){
-			testController.autocomplete('kic',function(err, completions){
-				should.not.exist(err);
-				completions.should.be.a('object');
-				completions.length.should.be.a('number');
-				completions[0].should.be.a('object');
-				done();
-			});
-		});
-	});
-
-	describe('Stats', function(){
-		// it('should take a counts array that tracks stats', function(){};
-		// @todo - flesh out these tests.
-		it('should have a get stats method', function(done){
-			testController.stats(function(err,stats){
-				should.not.exist(err);
-				stats.should.be.a('object');
-				done();
-			});
 		});
 	});
 });
