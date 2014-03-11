@@ -8,12 +8,14 @@ describe('Relationships', function(){
 	var Target = new EventEmitter
 		, SingleReference = new EventEmitter
 		, GroupReference = new EventEmitter
+		, FilteredReference = new EventEmitter
 		, relationship;
 
 	Target.name = "targets";
 	Target.relationships = {
 		"singles" : {	model : SingleReference, key : "targetId", added : "singleAdded", removed : "singleRemoved" },
-		"manies" : { model : GroupReference, key : "targetId", sortedSets : ['created','updated'], added : "groupAdded", removed : "groupRemoved" }
+		"manies" : { model : GroupReference, key : "targetId", sortedSets : ['created','updated'], added : "groupAdded", removed : "groupRemoved" },
+		"filtered" : { model : FilteredReference, key : "targetId", filter : "shouldAddFiltered", added : "filteredAdded", removed : "filteredRemoved" }
 	};
 
 	SingleReference.name = "singles";
@@ -95,6 +97,31 @@ describe('Relationships', function(){
 				res[0].should.equal('26');
 				done();
 			});
+		});
+	});
+
+	describe('filtered references', function(done){
+		it('should call the filter function on reference creation', function(done){
+			Target.shouldAddFiltered = function(model, options) {
+				done();
+				// redefine here so we don't keep calling "done"
+				Target.shouldAddFiltered = function (model, options) { return model.shouldAdd; };
+				return model.shouldAdd;
+			}
+			FilteredReference.emit('created', { id : 26, targetId : 2, created : new Date().valueOf(), updated : new Date().valueOf() });
+		});
+		it('shouldn\'t add if when the model fails the test', function(done){
+			Target.filteredAdded = function (model, options) {
+				throw "this shouldn't call";
+			}
+			FilteredReference.emit('created', { shouldAdd : false, id : 26, targetId : 2, created : new Date().valueOf(), updated : new Date().valueOf() });
+			setTimeout(done,40);
+		});
+		it('should add when the model passes the filter test', function(done){
+			Target.filteredAdded = function (model, options) {
+				done();
+			}
+			FilteredReference.emit('created', { shouldAdd : true, id : 26, targetId : 2, created : new Date().valueOf(), updated : new Date().valueOf() });
 		});
 	});
 
