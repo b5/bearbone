@@ -24,14 +24,14 @@ describe('Sorting Protocol', function (){
 			try {
 				var sorting = new Sorting({ name : "carl" });
 			} catch (err) {
-				err.should.be.a("string");
+				should.exist(err);
 			}
 		});
 		it('should reject targets without a name', function (){
 			try {
-				new Sorting({});
+				var sorting = new Sorting({});
 			} catch (err) {
-				err.should.be.a("string");
+				should.exist(err);
 			}
 		});
 		it('should accept a proper target', function(){

@@ -1,10 +1,10 @@
 var should = require('should')
 	, db = require('ninjazord')
-	, Route = require('../lib/Route')
+	, Sorting = require('../lib/Sorting')
 	, EventEmitter = require('events').EventEmitter;
 
 
-describe('Sorting Protocol', function (){
+describe('Route Protocol', function (){
 	var route
 		, Target = new EventEmitter;
 
@@ -23,14 +23,14 @@ describe('Sorting Protocol', function (){
 			try {
 				var route = new Sorting({ name : "carl" });
 			} catch (err) {
-				err.should.be.a("string");
+				should.exist(err);
 			}
 		});
 		it('should reject targets without a name', function (){
 			try {
-				new Sorting({});
+				var sorting = new Sorting({});
 			} catch (err) {
-				err.should.be.a("string");
+				should.exist(err);
 			}
 		});
 		it('should accept a proper target', function(){
