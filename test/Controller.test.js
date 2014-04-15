@@ -12,9 +12,9 @@ describe('Controller',function () {
 	var TestModel = Model.extend({
 				name : 'testModels',
 				attributes : {
-					title : ['string',true, false, 'default title'],
-					body : ['string',false,false,'default body'],
-					hidden : ['boolean', true, false, false]
+					title : { type : 'string', required : true, default : 'default title' },
+					body :  { type : 'string', required : false,default : 'default body' },
+					hidden : { type : 'boolean', required : true, default : false }
 				}
 			})
 		, testModel = new TestModel()

@@ -20,6 +20,11 @@ describe('Relationships', function(){
 
 	SingleReference.name = "singles";
 	GroupReference.name = "manies";
+	SingleReference.id = GroupReference.id = FilteredReference.id = function(model) {
+		if (typeof model === "object") { return model.id; }
+		else { return model; }
+	}
+
 
 	before(function(done){
 		// testModel.verbose = true;

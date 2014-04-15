@@ -6,8 +6,8 @@ describe('Model', function(){
 	var TestModel = Model.extend({
 				name : "test",
 				attributes: {
-					body : ['string', true],
-					defaultAttr : ['string', true, false, 'Store Me.']
+					body : { type : 'string', required : true },
+					defaultAttr :  { type : 'string', required : true, default : 'Store Me.' }
 				}
 			})
 		, model = new TestModel()
@@ -125,20 +125,30 @@ describe('Model', function(){
 		var TypeTestModel = Model.extend({
 			name : 'typeTests',
 			attributes : {
-				num : ['number', true],
-				str : ['str', true],
-				bool: ['boolean']
+				num : { type : 'number', required : true },
+				str : { type : 'string', required : true },
+				bool: { type : 'boolean' },
+				model : { type : "wrench" }
 			}
 		});
 
 		var typeTest = new TypeTestModel();
-		it('should not store numbers that coerce to "NaN"', function(){
+		it('should not store numbers that coerces to "NaN"', function(){
 			typeTest.validate({ num : 'SMOKE', str : 'a'}).should.instanceof(typeTest.Error);
 			typeTest.validate({ num : '1234e5ehds', str : 'a'}).should.instanceof(typeTest.Error);
 		});
 
 		it('shouldn\'t accept numbers for strings', function(){
 			typeTest.validate({num : 5, str : 5}).should.instanceof(typeTest.Error);
+		});
+
+		it('should allow model types with a _type that matches', function(){
+			typeTest.validate({num : 5, str : "stuff", model : { id : 5 } }).should.instanceof(typeTest.Error);
+			typeTest.validate({num : 5, str : "stuff", model : { id : 5, _type : "wrench"} }).should.equal(true);
+		});
+
+		it('should also allow numbers (ids) for model types', function(){
+			typeTest.validate({num : 5, str : "stuff", model : 5 }).should.equal(true);
 		});
 	});
 
@@ -200,9 +210,9 @@ describe('Model', function(){
 		var ObjectModel = Model.extend({
 			name : 'objectModels',
 			attributes : {
-				one : ['string',true,false,'attrOne'],
-				two : ['object',true,false,{ example : 'value' }],
-				three : ['object']
+				one : { type : 'string', required : true, default : 'attrOne'},
+				two : { type : 'object', required : true, default : { example : 'value' }},
+				three : { type : 'object' }
 			}
 		});
 		var objectModel = new ObjectModel()
